@@ -2,12 +2,8 @@
 // Create Phonebook API, Returns hardcoded list at first
 // Expressjs
 const express = require('express')
-const cors = require('cors')
 const morgan = require('morgan')
 const app = express()
-
-// Enable cors for all routes
-app.use(cors())
 
 // Enable express json
 app.use(express.json())
