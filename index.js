@@ -3,7 +3,17 @@
 // Expressjs
 const express = require('express')
 const morgan = require('morgan')
+const mongoose = require('mongoose')
 const app = express()
+
+// Database setup
+const password = process.argv[2]
+const collection = 'phonebook'
+const url = `mongodb+srv://fullstack:${password}@cluster0.taublwt.mongodb.net/${collection}?appName=Cluster0`
+
+mongoose.set('stringQuery', false)
+mongoose.connect(url, {family: 4})
+
 
 // Enable express json
 app.use(express.json())
