@@ -6,6 +6,8 @@ const app = express()
 
 const Person = require('./models/person')
 
+const url = process.env.MONGODB_URI
+
 console.log('connecting to...', url)
 mongoose.connect(url, {family: 4}).then(result => {
     console.log('connected to MongoDB')
@@ -14,7 +16,6 @@ mongoose.connect(url, {family: 4}).then(result => {
 })
 
 mongoose.set('strictQuery', false)
-mongoose.connect(url, {family: 4})
 
 
 // Enable express json
