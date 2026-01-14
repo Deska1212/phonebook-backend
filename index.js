@@ -1,17 +1,17 @@
-// Install all required depencencies and modules
-// Create Phonebook API, Returns hardcoded list at first
-// Expressjs
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const mongoose = require('mongoose')
 const app = express()
+
+const Note = require('./models/note')
 
 // Database setup
 const password = process.argv[2]
 const collection = 'phonebook'
 const url = `mongodb+srv://fullstack:${password}@cluster0.taublwt.mongodb.net/${collection}?appName=Cluster0`
 
-mongoose.set('stringQuery', false)
+mongoose.set('strictQuery', false)
 mongoose.connect(url, {family: 4})
 
 
@@ -162,7 +162,7 @@ app.post(`/api/persons`, (request, response) => {
 
 // })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log('Server running on port', PORT)
 })
