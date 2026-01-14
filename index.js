@@ -4,12 +4,14 @@ const morgan = require('morgan')
 const mongoose = require('mongoose')
 const app = express()
 
-const Note = require('./models/note')
+const Person = require('./models/person')
 
-// Database setup
-const password = process.argv[2]
-const collection = 'phonebook'
-const url = `mongodb+srv://fullstack:${password}@cluster0.taublwt.mongodb.net/${collection}?appName=Cluster0`
+console.log('connecting to...', url)
+mongoose.connect(url, {family: 4}).then(result => {
+    console.log('connected to MongoDB')
+}).catch(error => {
+    console.log('unable to connect to MongoDB')
+})
 
 mongoose.set('strictQuery', false)
 mongoose.connect(url, {family: 4})
