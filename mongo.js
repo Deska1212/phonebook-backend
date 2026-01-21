@@ -17,10 +17,7 @@ mongoose.set('strictQuery', false)
 mongoose.connect (url, {family: 4}) // Family is specifying that we are using IPv4
 
 // Defining schema for the note, how the notes will be stored in the DB
-const personSchema = new mongoose.Schema({
-    name: String, 
-    number: String,
-})
+
 
 // 'Note' is the name of the model, 
 // Mongo is schemaless so it doesn't enforce it on the DB side
