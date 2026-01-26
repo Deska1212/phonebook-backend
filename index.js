@@ -26,12 +26,6 @@ app.use(express.json())
 // Configure Morgan logging service
 app.use(morgan('common'))
 
-// Express static content
-app.use(express.static('dist'))
-
-
-
-
 console.log('Server completed setup')
 
 // Get all persons
@@ -43,7 +37,7 @@ app.get('/api/persons', (request, response) => {
     })
 })
 
-// Info 
+// Info page - Needs to be before we serve static content
 app.get('/info', (request, response) => {
   const now = Date()
   let personCount = 0
@@ -57,9 +51,8 @@ app.get('/info', (request, response) => {
     </div>
     `)
   })
-
-  
 })
+
 
 // Get single entry by id.
 app.get(`/api/persons/:id`, (request, response, next) => {
@@ -134,8 +127,33 @@ app.post(`/api/persons`, (request, response) => {
   })
 })
 
-app.put(`/api/persons/:id`, (request, response) => {
-  
+app.put(`/api/persons/:id`, (request, response, next) => {
+  const id = request.params.id
+
+  console.log(`Attempting to update person: ${request.body.name} (${id}), with number ${request.body.number} `)
+
+  // Check for valid ObjectID
+  if(!mongoose.Types.ObjectId.isValid(id))
+  {
+    console.log(`Invalid ObjectID: ${id}`)
+    return response.status(400).json({error: "Invalid Object ID"})
+  }
+
+  // Look for person in DB
+  Person.findByIdAndUpdate(id, {number: request.body.number}, {new: true, runValidators: true})
+  .then(updatedPerson => {
+    // Check if updated person is null
+    if(!updatedPerson)
+    {
+      console.log(`Could not find person of ID ${id}`)
+      return response.status(404).json({error: `Unable to update person of ID ${id}. Person not found`})
+    }
+
+    // Return the updated person
+    console.log(`Person updated`, updatedPerson)
+    return response.status(200).json(updatedPerson)
+  })
+  .catch(error => next(error))
 })
 
 
@@ -154,6 +172,8 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler)
 
+// Express static content
+app.use(express.static('dist'))
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
